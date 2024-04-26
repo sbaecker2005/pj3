@@ -3,5 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
+void deletarContatos(Agenda *agenda);
 
 
