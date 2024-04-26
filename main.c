@@ -8,7 +8,7 @@ void deletarContatos(Agenda *agenda);
 int main() {
   Agenda agenda;
   inicializarAgenda(&agenda);
-
+  carregarAgenda(&agenda);
 
   int opcao;
   do {
@@ -49,4 +49,3 @@ int main() {
 
   return 0;
 }
-
