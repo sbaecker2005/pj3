@@ -1,4 +1,3 @@
-
 #include "tarefas.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,41 +32,6 @@ void adicionarContato(Agenda *agenda) {
   printf("Contato adicionado com sucesso!\n");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void listarContatos() {
   printf("Listando contatos da sua agenda:\n");
   
@@ -88,36 +52,24 @@ void listarContatos() {
 }
 
 void deletarContatos(Agenda *agenda) {
-  FILE *temp = fopen("temp.bin", "w");
-  if (temp == NULL) {
-    printf("Erro ao criar arquivo temporario!\n");
-    return;
-  }
-
-  char telefone[12];
-  printf("Telefone do contato para deletar: ");
-  scanf("%11s", telefone);
-  limparBuffer();
+    char telefone[12];
+    printf("Telefone do contato para deletar: ");
+    scanf("%11s", telefone);
+    limparBuffer();
 
 
-  int encontrado = 0;
-  for (int i = 0; i < agenda->numContatos; i++) {
-          if (strcmp(agenda->contatos[i].telefone, telefone) != 0) {
-              fprintf(temp, "%s %s %s %s\n", agenda->contatos[i].nome,
-                      agenda->contatos[i].sobrenome, agenda->contatos[i].email,
-                      agenda->contatos[i].telefone);
-
-          } else {
-          encontrado = 1;
-      }
-  }
-  fclose(temp);
-  if (!encontrado) {
-    printf("Contato nao encontrado!\n");
-    remove("temp.bin");
-  } else {
-    remove("agenda.bin");
-    rename("temp.bin", "agenda.bin");
-    printf("Contato deletado com sucesso!\n");
-  }
+    int encontrado = 0;
+    for (int i = 0; i < agenda->numContatos; i++) {
+        if (strcmp(agenda->contatos[i].telefone, telefone) == 0) {
+            encontrado = 1;
+            agenda->numContatos--;
+            agenda->contatos[i] = agenda->contatos[agenda->numContatos];
+        }
+    }
+    if (!encontrado) {
+        printf("Contato nao encontrado!\n");
+    } else {
+        remove("agenda.bin");
+        printf("Contato deletado com sucesso!\n");
+    }
 }
