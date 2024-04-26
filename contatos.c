@@ -1,9 +1,12 @@
-
 #include "tarefas.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 void adicionarContato(Agenda *agenda) {
   if (agenda->numContatos >= MAX_CONTATOS) {
     printf("Agenda cheia, impossivel adicionar mais contatos!\n");
@@ -33,91 +36,53 @@ void adicionarContato(Agenda *agenda) {
   printf("Contato adicionado com sucesso!\n");
 }
 
+void listarContatos(const Agenda *agenda) {
+    printf("Listando contatos da sua agenda:\n");
+
+    for (int i = 0; i < agenda->numContatos; i++) {
+        Contato contato = agenda->contatos[i];
+        printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email,
+               contato.telefone);
+
+    }
+}
+void deletarContatos(Agenda *agenda) {
+    char telefone[12];
+    printf("Telefone do contato para deletar: ");
+    scanf("%11s", telefone);
+    limparBuffer();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void listarContatos() {
-  printf("Listando contatos da sua agenda:\n");
-  
- FILE *arquivo = fopen("agenda.bin", "r");
-  if (arquivo == NULL) {
-    printf("Erro ao abrir o arquivo para listar os contatos!\n");
-    return;
-  }
-
-  Contato contato;
-  while (fscanf(arquivo, "%49s %49s %49s %11s", contato.nome, contato.sobrenome,
-                contato.email, contato.telefone) == 4) {
-    printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email,
-           contato.telefone);
-  }
-
-  fclose(arquivo);
+    int encontrado = 0;
+    for (int i = 0; i < agenda->numContatos; i++) {
+        if (strcmp(agenda->contatos[i].telefone, telefone) == 0) {
+            encontrado = 1;
+            agenda->numContatos--;
+            agenda->contatos[i] = agenda->contatos[agenda->numContatos];
+        }
+    }
+    if (!encontrado) {
+        printf("Contato nao encontrado!\n");
+    } else {
+        remove("agenda.bin");
+        printf("Contato deletado com sucesso!\n");
+    }
 }
 
-void deletarContatos(Agenda *agenda) {
-  FILE *temp = fopen("temp.bin", "w");
-  if (temp == NULL) {
-    printf("Erro ao criar arquivo temporario!\n");
-    return;
-  }
+void salvarAgenda(const Agenda *agenda) {
+    FILE *arquivo = fopen("agenda.bin", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para salvar a agenda!\n");
+        return;
+    }
 
-  char telefone[12];
-  printf("Telefone do contato para deletar: ");
-  scanf("%11s", telefone);
-  limparBuffer();
+    for (int i = 0; i < agenda->numContatos; i++) {
+        fprintf(arquivo, "%s %s %s %s\n", agenda->contatos[i].nome,
+                agenda->contatos[i].sobrenome, agenda->contatos[i].email,
+                agenda->contatos[i].telefone);
+    }
 
+    fclose(arquivo);
 
-  int encontrado = 0;
-  for (int i = 0; i < agenda->numContatos; i++) {
-          if (strcmp(agenda->contatos[i].telefone, telefone) != 0) {
-              fprintf(temp, "%s %s %s %s\n", agenda->contatos[i].nome,
-                      agenda->contatos[i].sobrenome, agenda->contatos[i].email,
-                      agenda->contatos[i].telefone);
-
-          } else {
-          encontrado = 1;
-      }
-  }
-  fclose(temp);
-  if (!encontrado) {
-    printf("Contato nao encontrado!\n");
-    remove("temp.bin");
-  } else {
-    remove("agenda.bin");
-    rename("temp.bin", "agenda.bin");
-    printf("Contato deletado com sucesso!\n");
-  }
+    printf("Agenda salva com sucesso!\n");
 }
