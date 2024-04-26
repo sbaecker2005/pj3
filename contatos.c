@@ -32,25 +32,16 @@ void adicionarContato(Agenda *agenda) {
   printf("Contato adicionado com sucesso!\n");
 }
 
-void listarContatos() {
-  printf("Listando contatos da sua agenda:\n");
-  
- FILE *arquivo = fopen("agenda.bin", "r");
-  if (arquivo == NULL) {
-    printf("Erro ao abrir o arquivo para listar os contatos!\n");
-    return;
-  }
+void listarContatos(const Agenda *agenda) {
+    printf("Listando contatos da sua agenda:\n");
 
-  Contato contato;
-  while (fscanf(arquivo, "%49s %49s %49s %11s", contato.nome, contato.sobrenome,
-                contato.email, contato.telefone) == 4) {
-    printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email,
-           contato.telefone);
-  }
+    for (int i = 0; i < agenda->numContatos; i++) {
+        Contato contato = agenda->contatos[i];
+        printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email,
+               contato.telefone);
 
-  fclose(arquivo);
+    }
 }
-
 void deletarContatos(Agenda *agenda) {
     char telefone[12];
     printf("Telefone do contato para deletar: ");
