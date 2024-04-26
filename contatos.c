@@ -51,8 +51,10 @@ void listarContatos(const Agenda *agenda) {
     }
 }
 
+
 void deletarContatos(Agenda *agenda) {
     char telefone[12];
+    printf("apos deletar salve para essa açao ser salva\n");
     printf("Telefone do contato para deletar: ");
     scanf("%11s", telefone);
     limparBuffer();
@@ -69,10 +71,10 @@ void deletarContatos(Agenda *agenda) {
     if (!encontrado) {
         printf("Contato nao encontrado!\n");
     } else {
-        remove("agenda.bin");
         printf("Contato deletado com sucesso!\n");
     }
 }
+
 
 
 void salvarAgenda(const Agenda *agenda) {
