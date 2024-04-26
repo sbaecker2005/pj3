@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 void adicionarContato(Agenda *agenda) {
   if (agenda->numContatos >= MAX_CONTATOS) {
     printf("Agenda cheia, impossivel adicionar mais contatos!\n");
