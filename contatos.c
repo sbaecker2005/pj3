@@ -68,3 +68,21 @@ void deletarContatos(Agenda *agenda) {
         printf("Contato deletado com sucesso!\n");
     }
 }
+
+void salvarAgenda(const Agenda *agenda) {
+    FILE *arquivo = fopen("agenda.bin", "w");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para salvar a agenda!\n");
+        return;
+    }
+
+    for (int i = 0; i < agenda->numContatos; i++) {
+        fprintf(arquivo, "%s %s %s %s\n", agenda->contatos[i].nome,
+                agenda->contatos[i].sobrenome, agenda->contatos[i].email,
+                agenda->contatos[i].telefone);
+    }
+
+    fclose(arquivo);
+
+    printf("Agenda salva com sucesso!\n");
+}
