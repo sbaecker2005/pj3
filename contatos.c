@@ -8,32 +8,33 @@ void limparBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 void adicionarContato(Agenda *agenda) {
-  if (agenda->numContatos >= MAX_CONTATOS) {
-    printf("Agenda cheia, impossivel adicionar mais contatos!\n");
-    return;
-  }
+    if (agenda->numContatos >= MAX_CONTATOS) {
+        printf("Agenda cheia, impossivel adicionar mais contatos!\n");
+        return;  
+    }
 
-  Contato novoContato;
+    Contato novoContato;
 
-  printf("Nome: ");
-  scanf("%49s", novoContato.nome);
-  limparBuffer();
+    printf("Nome: ");
+    scanf("%49s", novoContato.nome);
+    limparBuffer();
 
-  printf("Sobrenome: ");
-  scanf("%49s", novoContato.sobrenome);
-  limparBuffer();
+    printf("Sobrenome: ");
+    scanf("%49s", novoContato.sobrenome);
+    limparBuffer();
 
-  printf("Email: ");
-  scanf("%49s", novoContato.email);
-  limparBuffer();
+    printf("Email: ");
+    scanf("%49s", novoContato.email);
+    limparBuffer();
 
-  printf("Telefone: ");
-  scanf("%11s", novoContato.telefone);
-  limparBuffer();
+    printf("Telefone: ");
+    scanf("%11s", novoContato.telefone);
+    limparBuffer();
 
-  agenda->contatos[agenda->numContatos++] = novoContato;
+    agenda->contatos[agenda->numContatos++] = novoContato;
 
-  printf("Contato adicionado com sucesso!\n");
+    printf("Contato adicionado com sucesso!\n");
+    salvarAgenda(agenda);
 }
 
 void listarContatos(const Agenda *agenda) {
