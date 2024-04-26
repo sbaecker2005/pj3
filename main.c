@@ -5,4 +5,6 @@
 
 void deletarContatos(Agenda *agenda);
 
-
+int main() {
+  Agenda agenda;
+  inicializarAgenda(&agenda);
