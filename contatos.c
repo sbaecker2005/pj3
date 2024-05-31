@@ -8,7 +8,9 @@ void limparBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-void inicializarAgenda(Agenda *agenda) { agenda->numContatos = 0; }
+void inicializarAgenda(Agenda *agenda) {
+    agenda->numContatos = 0;
+}
 
 void adicionarContato(Agenda *agenda) {
     if (agenda->numContatos >= MAX_CONTATOS) {
@@ -19,19 +21,35 @@ void adicionarContato(Agenda *agenda) {
     Contato novoContato;
 
     printf("Nome: ");
-    scanf("%49s", novoContato.nome);
+    if (scanf("%49s", novoContato.nome) != 1) {
+        printf("Erro ao ler o nome!\n");
+        limparBuffer();
+        return;
+    }
     limparBuffer();
 
     printf("Sobrenome: ");
-    scanf("%49s", novoContato.sobrenome);
+    if (scanf("%49s", novoContato.sobrenome) != 1) {
+        printf("Erro ao ler o sobrenome!\n");
+        limparBuffer();
+        return;
+    }
     limparBuffer();
 
     printf("Email: ");
-    scanf("%49s", novoContato.email);
+    if (scanf("%49s", novoContato.email) != 1) {
+        printf("Erro ao ler o email!\n");
+        limparBuffer();
+        return;
+    }
     limparBuffer();
 
     printf("Telefone: ");
-    scanf("%11s", novoContato.telefone);
+    if (scanf("%11s", novoContato.telefone) != 1) {
+        printf("Erro ao ler o telefone!\n");
+        limparBuffer();
+        return;
+    }
     limparBuffer();
 
     agenda->contatos[agenda->numContatos++] = novoContato;
@@ -45,20 +63,20 @@ void listarContatos(const Agenda *agenda) {
 
     for (int i = 0; i < agenda->numContatos; i++) {
         Contato contato = agenda->contatos[i];
-        printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email,
-               contato.telefone);
-
+        printf("%s %s, %s, %s\n", contato.nome, contato.sobrenome, contato.email, contato.telefone);
     }
 }
-
 
 void deletarContatos(Agenda *agenda) {
     char telefone[12];
     printf("apos deletar salve para essa açao ser salva\n");
     printf("Telefone do contato para deletar: ");
-    scanf("%11s", telefone);
+    if (scanf("%11s", telefone) != 1) {
+        printf("Erro ao ler o telefone!\n");
+        limparBuffer();
+        return;
+    }
     limparBuffer();
-
 
     int encontrado = 0;
     for (int i = 0; i < agenda->numContatos; i++) {
@@ -66,6 +84,7 @@ void deletarContatos(Agenda *agenda) {
             encontrado = 1;
             agenda->numContatos--;
             agenda->contatos[i] = agenda->contatos[agenda->numContatos];
+            break;
         }
     }
     if (!encontrado) {
@@ -75,54 +94,31 @@ void deletarContatos(Agenda *agenda) {
     }
 }
 
-
-
 void salvarAgenda(const Agenda *agenda) {
-    FILE *arquivo = fopen("agenda.bin", "w");
+    FILE *arquivo = fopen("agenda.bin", "wb");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo para salvar a agenda!\n");
+        printf("Erro ao abrir arquivo para escrita!\n");
         return;
     }
-
-    for (int i = 0; i < agenda->numContatos; i++) {
-        fprintf(arquivo, "%s %s %s %s\n", agenda->contatos[i].nome,
-                agenda->contatos[i].sobrenome, agenda->contatos[i].email,
-                agenda->contatos[i].telefone);
+    if (fwrite(agenda, sizeof(Agenda), 1, arquivo) != 1) {
+        printf("Erro ao salvar a agenda!\n");
+    } else {
+        printf("Agenda salva com sucesso!\n");
     }
-
     fclose(arquivo);
-
-    printf("Agenda salva com sucesso!\n");
 }
 
 void carregarAgenda(Agenda *agenda) {
-    FILE *arquivo = fopen("agenda.bin", "r");
+    FILE *arquivo = fopen("agenda.bin", "rb");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo para carregar a agenda!\n");
+        printf("Erro ao abrir arquivo para leitura!\n");
         return;
     }
-
-    inicializarAgenda(agenda);
-    for (;;) {
-        int rc = fscanf(arquivo, "%49s %49s %49s %11s",
-                        agenda->contatos[agenda->numContatos].nome,
-                        agenda->contatos[agenda->numContatos].sobrenome,
-                        agenda->contatos[agenda->numContatos].email,
-                        agenda->contatos[agenda->numContatos].telefone);
-        if (rc != 4) {
-            break;
-        }
-        agenda->numContatos++;
-        if (agenda->numContatos >= MAX_CONTATOS) {
-            printf("Limite de contatos atingido durante a leitura do arquivo.\n");
-            break;
-        }
+    if (fread(agenda, sizeof(Agenda), 1, arquivo) != 1) {
+        printf("Erro ao carregar a agenda!\n");
+    } else {
+        printf("Agenda carregada com sucesso!\n");
     }
-
-
     fclose(arquivo);
-
-    printf("Agenda carregada com sucesso!\n");
-    printf("Apos carregar salve para ser adcionado ao arquivo"
-           " 'agenda.bin'!\n");
+    printf("Apos carregar salve para ser adcionado ao arquivo \'agenda.bin\'!\n");
 }
